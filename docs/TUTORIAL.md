@@ -36,7 +36,7 @@ A **viseme** is a mouth pose representing one or more speech sounds. This add-on
 3. Open Blender's **Edit → Preferences → Add-ons**.
 4. Open the add-ons menu and select **Install from Disk**. Select the ZIP.
 5. Enable **Audio to Viseme Sync** and expand its preferences.
-6. In the 3D Viewport, press `N` and select **Viseme Sync**. Its panel heading is **DAZ Viseme Sync**.
+6. In the 3D Viewport, press `N` and select **Viseme Sync**. Its panel heading is **Viseme Sync**.
 
 This is a legacy add-on. It has no `blender_manifest.toml`. The installable ZIP contains:
 

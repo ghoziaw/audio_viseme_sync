@@ -446,7 +446,7 @@ class DVS_OT_Generate(bpy.types.Operator):
         self.cleanup(context)
 
 class DVS_PT_Panel(bpy.types.Panel):
-    bl_label = 'DAZ Viseme Sync'
+    bl_label = 'Viseme Sync'
     bl_idname = 'DVS_PT_panel'
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'

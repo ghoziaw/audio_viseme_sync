@@ -24,7 +24,7 @@ keyframes while leaving the controls' downstream facial drivers intact.
 - **[Installable add-on ZIP](downloads/audio_viseme_sync-0.2.0.zip)** — open the
   file and use GitHub's download button; do not save the HTML preview page.
 - The Blender preferences entry is **Audio to Viseme Sync**. The sidebar tab is
-  **Viseme Sync**, and the panel title is **DAZ Viseme Sync**.
+  **Viseme Sync**, and the panel title is **Viseme Sync**.
 
 ## Features at a glance
 
@@ -210,8 +210,8 @@ curve bounds, discovery, ARPABET conversion, and audio command construction.
 They do not run Blender, Conda/MFA alignment, or Rhubarb recognition. Actual
 character compatibility and end-to-end lip-sync quality remain unverified.
 
-The original six Python modules are preserved; documentation and packaging
-support do not change their runtime behavior.
+The panel heading is **Viseme Sync**. This UI-label change does not alter
+viseme discovery, analysis, or keyframe-generation behavior.
 
 ## License
 

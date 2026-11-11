@@ -1,10 +1,19 @@
 # Audio to Viseme Sync
 
-**Turn recorded dialogue into editable DAZ viseme animation in Blender.**
+**Turn recorded dialogue into editable viseme animation in Blender — with DAZ controls or your own custom visemes.**
 
 Audio to Viseme Sync connects Montreal Forced Aligner (MFA) or Rhubarb Lip Sync
-to the numeric viseme controls of a Diffeomorphic-imported DAZ armature. It
-creates editable keyframes while leaving the controls' facial drivers intact.
+to numeric viseme controls on an armature. Use Diffeomorphic-imported DAZ
+controls, or manually prepare and map your own mouth poses. Diffeomorphic is
+not required for the custom-property workflow. The add-on creates editable
+keyframes while leaving the controls' downstream facial drivers intact.
+
+> **Bring your own visemes:** expose your mouth poses as undriven numeric custom
+> properties on the **armature object**, use scanner-compatible names such as
+> `viseme_AA`, `viseme_M`, or `viseme_MyMouthPose`, then scan and map them manually.
+> Direct mesh shape-key or pose-bone targets and arbitrary unrecognized property
+> names are not supported in version 0.2.0.
+> **[Custom-viseme setup guide](docs/TUTORIAL.md#use-your-own-visemes-without-daz)**
 
 **Author:** GhoziAW · **Version:** 0.2.0 · **Blender target:** 5.0
 
@@ -22,6 +31,7 @@ creates editable keyframes while leaving the controls' facial drivers intact.
 | Feature | What it provides |
 |---|---|
 | Two analysis engines | English transcript-based MFA or Rhubarb recognition |
+| Your own visemes | Manually map custom armature-property mouth controls; DAZ is optional |
 | Editable mapping | Sixteen MFA poses or eight Rhubarb poses, each with gain |
 | Reuse analysis | Import long-format MFA TextGrid or Rhubarb JSON |
 | Audio formats | WAV, OGG, MP3, M4A; FFmpeg conversion when required |
@@ -36,7 +46,8 @@ animation system.
 
 ## Technical overview
 
-Target: Blender 5.0 and Diffeomorphic DAZ Importer 5.0.
+Target: Blender 5.0. Diffeomorphic DAZ Importer 5.0 is the intended DAZ
+integration; custom armature-property setups do not require it.
 Recorded audio -> MFA or Rhubarb -> editable viseme-control keyframes.
 Only mapped viseme controls are keyed. No separate brow, eye, jaw or tongue
 animation is generated. A viseme's own facial-bone/shape-key drivers stay intact.
@@ -204,9 +215,8 @@ support do not change their runtime behavior.
 
 ## License
 
-No license file was supplied with this folder. A license has not been chosen on
-the author's behalf. Public repository visibility alone does not specify reuse
-permissions. External tools and models have their own licenses.
+Licensed under the **[MIT License](LICENSE)**. Copyright (c) 2026 GhoziAW.
+External tools, models, and character assets retain their own licenses.
 
 ## Technical sources
 

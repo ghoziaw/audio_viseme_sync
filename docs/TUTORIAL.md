@@ -9,7 +9,7 @@ This guide describes version 0.2.0 as implemented in the supplied source. Blende
 1. [Choose an engine](#1-choose-an-engine)
 2. [Install the add-on](#2-install-the-add-on)
 3. [Install external tools](#3-install-external-tools)
-4. [Prepare your character](#4-prepare-your-character)
+4. [Prepare your character](#4-prepare-your-character), including [your own custom visemes](#use-your-own-visemes-without-daz)
 5. [Generate with MFA](#5-generate-with-mfa)
 6. [Generate with Rhubarb](#6-generate-with-rhubarb)
 7. [Import existing analysis](#7-import-existing-analysis)
@@ -21,7 +21,7 @@ This guide describes version 0.2.0 as implemented in the supplied source. Blende
 
 ## 1. Choose an engine
 
-A **viseme** is a mouth pose representing one or more speech sounds. This add-on turns timed sound labels into animation of the corresponding imported facial controls. It does not create missing visemes or repair a character's drivers.
+A **viseme** is a mouth pose representing one or more speech sounds. This add-on turns timed sound labels into animation of the corresponding imported or user-created facial controls. It does not create missing visemes or repair a character's drivers.
 
 **Choose MFA** when you have an accurate English transcript and want the sixteen-pose workflow. MFA aligns the written dialogue to the recording; the add-on maps its English ARPABET phones to mouth poses.
 
@@ -49,6 +49,7 @@ audio_viseme_sync/
   mfa.py
   mfa_runner.py
   README.md
+  LICENSE
   docs/
     TUTORIAL.md
 ```
@@ -119,8 +120,8 @@ The add-on calls Rhubarb with JSON output and extended shapes `GHX`.
 
 ## 4. Prepare your character
 
-1. Import and prepare your DAZ character using your Diffeomorphic workflow.
-2. Ensure its required visemes/FACS viseme controls are imported and available.
+1. Prepare your character: either use your Diffeomorphic DAZ workflow or follow [Use your own visemes without DAZ](#use-your-own-visemes-without-daz) below.
+2. Ensure its required mouth poses are exposed through imported or custom armature-object viseme controls.
 3. Move a viseme slider manually and confirm the face responds, then return it to neutral. If the slider does not work manually, generating keyframes will not fix it.
 4. Select the character's **armature**, not its face mesh.
 5. In **Viseme Sync**, choose the armature in **DAZ rig**. When no rig is set, scanning can use the active armature.
@@ -133,6 +134,43 @@ The add-on calls Rhubarb with JSON output and extended shapes `GHX`.
 The scanner considers numeric custom properties on the armature object, together with supported Diffeomorphic metadata and labels. It excludes booleans, directly driven properties, final/reset properties, and unrelated FACS controls. Visemes do not need a matching mesh shape-key name.
 
 An ambiguous suggestion is intentionally left blank. Choose the appropriate control manually. If necessary, map multiple sound codes to the same broader mouth pose. Scanning again clears both engines' mappings and resets the confirmation checkbox.
+
+### Use your own visemes without DAZ
+
+**You can use mouth poses you made yourself. A DAZ character and Diffeomorphic are not required for this workflow.** The current add-on needs an armature-object property interface to those poses; it cannot directly select arbitrary mesh shape keys or pose-bone controls.
+
+#### A. Expose your poses as armature controls
+
+1. Prepare your mouth poses using shape keys, bones, or your existing facial rig.
+2. On the **armature object**, add one numeric custom property per mouth-pose control. Use float properties, with a neutral value of `0.0` and a useful working range of `0.0`–`1.0`. Put these on the object, **not** the armature data block, a pose bone, or the face mesh.
+3. Name them with the `viseme_` prefix. Examples: `viseme_AA`, `viseme_M`, `viseme_OH`, or `viseme_MyMouthPose`. The scanner accepts the `viseme` prefix even when the remaining name is your own label. Familiar sound labels may get automatic suggestions; custom labels require manual mapping.
+4. Connect each property to the corresponding facial pose using drivers. The armature property must be the **input**, not a driven output. For a shape-key example, a driver on the shape key's Value can use a Single Property variable targeting your armature object with data path `["viseme_AA"]`; using that variable as the driver expression makes the shape key follow the slider. Preserve existing rig logic rather than overwriting drivers blindly.
+5. Move each custom slider manually and confirm it produces the intended pose. Return it to zero before generating.
+
+The relationship should be:
+
+```text
+Add-on keyframes → armature object custom property → your drivers → mouth pose
+```
+
+It should **not** be a driver feeding into the property that the add-on must key: directly driven input properties are excluded. Properties ending in `(fin)` or `(rst)` and boolean properties are also excluded.
+
+For Blender's driver configuration concepts, see the [official Drivers Panel reference](https://docs.blender.org/manual/en/2.80/animation/drivers/drivers_panel.html) (the linked reference describes Single Property variables and custom-property paths; UI layout can differ in newer versions).
+
+#### B. Map the controls manually
+
+1. Select your armature in **DAZ rig**. That is the current UI label; the selector accepts armature objects, not only DAZ rigs.
+2. Choose your engine and click **Scan Visemes + FACS**. The button also scans recognized custom-property names without DAZ metadata.
+3. In each mapping row, choose the custom property that produces the desired mouth pose. You are not required to accept the automatic suggestion or use a DAZ naming convention beyond the scanner requirements above.
+4. Adjust each row's Gain. Multiple rows may target the same property if you use a simplified pose set.
+5. For Rhubarb, fill all eight rows. For MFA, all poses used in the alignment must be mapped; unused rows can remain blank, with at least one valid mapping overall.
+6. Check **I checked the viseme mapping**, then generate or import analysis as usual.
+
+Example: Rhubarb `A` can map to your `viseme_LipsClosed`, `D` to `viseme_WideOpen`, and `E` to `viseme_Round`. These names describe your artwork, not fixed built-in assets. Create the corresponding controls and connections yourself first.
+
+**Important limits:** manually choosing a target does not bypass validation. An arbitrary property called `mouthOpen` will not be accepted unless recognized through supported metadata; expose it through a scanner-compatible input such as `viseme_MouthOpen`. Merely renaming a mesh shape key is not sufficient. Creating a custom property alone does not make the face move. When renaming existing controls, update any driver paths that refer to them. Rescanning resets both engines' mappings and gains.
+
+This documents the existing property-based mechanism; it is not a new universal-rig feature or a claim of end-to-end testing with every custom rig.
 
 ## 5. Generate with MFA
 

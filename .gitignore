@@ -1,0 +1,21 @@
+# Python caches
+__pycache__/
+*.py[cod]
+# Local environments and secrets
+.venv/
+venv/
+.env
+.env.*
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+# Local scene/audio assets and analysis outputs
+*.blend
+*.blend1
+*.wav
+*.mp3
+*.m4a
+*.ogg
+*.TextGrid
